@@ -1,91 +1,47 @@
 """
-
 Author: Kabeer Ahmad
-
 """
-
-#Main Perceptron Model
-
+#Main Perceptron Model   
 def perceptron(x,w,b):
-
-s=0
-
-#Calculating S = (W1 x X1)+(W2 x X2)......+(Wn x Xn)
-
-for i in range(len(x)):
-
-s+=w[i]*x[i]
-
-#Adding bias value to remove any error
-
-s+=b
-
-return 1 if s>0 else 0
+    s=0
+    #Calculating S = (W1 x X1)+(W2 x X2)......+(Wn x Xn)
+    for i in range(len(x)):
+        s+=w[i]*x[i]
+    #adding bias value to remove any error 
+    s+=b
+    return 1 if s>0 else 0
 
 #Logic Function
-
 def LogicFunction(x):
-
-#weights
-
-w=[1,1,1,1,1,1,1,1,1]
-
-#bias value
-
-b=-4
-
-return perceptron(x,w,b)
-
+    #weights
+    w=[1,1,1,1,1,1,1,1,1]
+    #bias value
+    b=-4
+    return perceptron(x,w,b)
 #For Displaying Test cases results
-
 def printTest(test):
-
-for i in range(len(test)):
-
-print(test[i]," ",end="")
-
-print(": ",LogicFunction(test))
-
-return
-
+    for i in range(len(test)):
+        print(test[i],"  ",end="")
+    print(": ",LogicFunction(test))
+    return
 #Making Test Cases for data
-
 test0 =[0,0,0,0,0,0,0,0,0]
-
 test1 =[1,0,0,0,0,0,0,0,0]
-
 test2 =[1,1,0,0,0,0,0,0,0]
-
 test3 =[1,1,1,0,0,0,0,0,0]
-
 test4 =[1,1,1,1,0,0,0,0,0]
-
 test5 =[1,1,1,1,1,0,0,0,0]
-
 test6 =[1,1,1,1,1,1,0,0,0]
-
 test7 =[1,1,1,1,1,1,1,0,0]
-
 test8 =[1,1,1,1,1,1,1,1,0]
-
 test9 =[1,1,1,1,1,1,1,1,1]
-
 printTest(test0)
-
 printTest(test1)
-
 printTest(test2)
-
 printTest(test3)
-
 printTest(test4)
-
 printTest(test5)
-
 printTest(test6)
-
 printTest(test7)
-
 printTest(test8)
-
 printTest(test9)
