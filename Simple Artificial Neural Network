@@ -1,0 +1,102 @@
+# Importing Library Files
+from time import sleep
+import numpy as np
+
+# Creating Perceptron Defination
+
+
+class Perceptron:
+    def __init__(self, input_size, epoch, learning_rate=0.01):
+        self.epoch = epoch
+        self.weights = np.zeros(input_size+1)
+        self.learning_rate = learning_rate
+
+    def predict(self, _inputs):
+        summition = np.dot(_inputs, self.weights[1:])+self.weights[0]
+        if summition > 0 and summition < 1:
+            return 1
+        elif summition > 1:
+            return 2
+        elif summition <= 0:
+            return 0
+
+    def train(self, inputs, labels):
+        _epoch = []
+        for _ in range(self.epoch):
+            for _input, label in zip(inputs, labels):
+                prediction = self.predict(_input)
+                self.weights[1:] += self.learning_rate * \
+                    (label - prediction) * _input
+                self.weights[0] += self.learning_rate * (label - prediction)
+                print("Learning Rate: ", self.learning_rate,
+                      " Weights: ", self.weights[1:])
+            print('------------------------------------------')
+
+
+# Creating Dataset For AND & OR Gates
+dataset = []
+dataset.append(np.array([0, 0]))
+dataset.append(np.array([0, 1]))
+dataset.append(np.array([1, 0]))
+dataset.append(np.array([1, 1]))
+and_labels = np.array([0, 0, 0, 1])
+or_labels = np.array([0, 1, 1, 1])
+
+# Creating instance of the Class
+perceptron = Perceptron(2, 20)
+
+pr_list = perceptron.train(dataset, and_labels)
+inputs = []
+inputs.append(np.array([0, 0]))
+inputs.append(np.array([0, 1]))
+inputs.append(np.array([1, 0]))
+inputs.append(np.array([1, 1]))
+print('AND Gate')
+for _input in inputs:
+    print(_input, ': ', perceptron.predict(_input))
+# Adding Delay To See Outputs
+sleep(5)
+pr_list = perceptron.train(dataset, or_labels)
+inputs = []
+inputs.append(np.array([0, 0]))
+inputs.append(np.array([0, 1]))
+inputs.append(np.array([1, 0]))
+inputs.append(np.array([1, 1]))
+print('OR Gate')
+for _input in inputs:
+    print(_input, ': ', perceptron.predict(_input))
+# Adding Delay To See Outputs
+sleep(5)
+
+_3x3_image = []
+_3x3_image.append(np.array([0, 0, 0, 0, 0, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 0, 0, 0, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 0, 0, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 0, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 1, 0, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 1, 1, 1, 0, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 0]))
+_3x3_image.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1]))
+
+_3x3_image_labels = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1])
+
+perceptron1 = Perceptron(9, 100)
+
+pr_list = perceptron1.train(_3x3_image, _3x3_image_labels)
+inputs = []
+inputs.append(np.array([0, 0, 0, 0, 0, 0, 0, 0, 0]))
+inputs.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0]))
+inputs.append(np.array([1, 1, 0, 0, 0, 0, 0, 0, 0]))
+inputs.append(np.array([1, 1, 1, 0, 0, 0, 0, 0, 0]))
+inputs.append(np.array([1, 1, 1, 1, 0, 0, 0, 0, 0]))
+inputs.append(np.array([1, 1, 1, 1, 1, 0, 0, 0, 0]))
+inputs.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0]))
+inputs.append(np.array([1, 1, 1, 1, 1, 1, 1, 0, 0]))
+inputs.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 0]))
+inputs.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1]))
+print('3X3 Image')
+for _input, label in zip(inputs, _3x3_image_labels):
+    print(_input, ': Predicted: ', perceptron1.predict(
+        _input), ' | Expected: ', label)
