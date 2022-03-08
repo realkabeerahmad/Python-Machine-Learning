@@ -1,0 +1,80 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+import pandas as pd
+
+ser = Service("C:\\chromedriver.exe")
+op = webdriver.ChromeOptions()
+driver = webdriver.Chrome("C:\\chromedriver.exe", options=op)
+driver.maximize_window()
+search_url = r'https://urdu.geo.tv/'
+
+def get_news(category):
+    driver.get(search_url+'category/'+category)    
+    print('Link opened')
+    news = driver.find_elements_by_class_name('col-xs-6.col-sm-6.col-lg-6.col-md-6.singleBlock')
+    print('Element Fetched on main page...')
+    _categories = [category]*len(news) 
+    links = []
+    titles = []
+    dates = []
+    for _news in news:
+        a_tag = ''
+        title = ''
+        date = ''
+        a_tag = _news.find_element_by_tag_name('a')
+        href = a_tag.get_attribute('href')
+        links.append(href)
+        print('Links Fetched')
+        title = a_tag.get_attribute('title')
+        titles.append(title)
+        print('Titels Fetched')
+        date = _news.find_element_by_class_name('date').text
+        dates.append(date)
+        print('Dates Fetched')
+        print('---------------------------')
+    return links, titles, dates, _categories
+
+def get_news_details(links):
+        details = []
+        count = 1
+        total = len(links)
+        for link in links:
+            try:
+                print('Entering New Link')
+                print(link)
+                driver.get(link)
+                news_details = driver.find_element_by_class_name('content-area')
+                _detail = news_details.find_elements_by_tag_name('p')
+                print('Element on detail page Fetched')
+                _str = []
+                for d in _detail:
+                    if d.text != '':
+                        _str.append(d.text)
+                details.append(' '.join(_str))
+                print(count,' Details Fetched out of ',total)
+                print('---------------------------')
+                count+=1
+            except:
+                details.append('')
+        return details
+
+if __name__ == '__main__':
+    categories = ['pakistan', 'world', 'sports', 'entertainment', 'business']
+    dataset = pd.DataFrame({'Date': [],
+                            'Headline': [],
+                            'Description': [],
+                            'Category':[],
+                            'URL': []})
+    for category in categories:
+        links, titles, dates, _categories= get_news(category)
+        details = get_news_details(links)
+        print('Data Successfully Scraped from ', category)
+        dataset = pd.concat([dataset, pd.DataFrame({'Date': dates,
+                                                    'Headline': titles,    
+                                                    'Description':details,
+                                                    'Category': _categories,
+                                                    'URL': links})])
+        dataset.to_csv('Assignment_No_2.csv', encoding='utf-8-sig', index=False)
+        print('Data from ',category,'saved in CSV')
+        print('---------------------------')
+    print('Program Execution Complete')
